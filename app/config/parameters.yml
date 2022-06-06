@@ -1,0 +1,22 @@
+# This file is auto-generated during the composer install
+parameters:
+    is_production: true
+    database_host: '%env(DB_HOST)%'
+    database_port: 27017
+    database_auth: null
+    database_name: '%env(DB_NAME)%'
+    database_user:
+    database_password:
+    mailer_transport: '%env(MAILER_TRANSPORT)%'
+    mailer_encryption: null
+    mailer_host: '%env(MAILER_HOST)%'
+    mailer_user: null
+    mailer_password: null
+    mailer_port: '%env(MAILER_PORT)%'
+    mailer_from: '%env(MAILER_FROM)%'
+    locale: en
+    secret: SecretMvcsRosch2022
+    token_secret: 'secret123456S*'
+    token_expiration_days: 14
+    production_url: 'http://mvc-tfg-srosch.com'
+    developer_email: srosch@uoc.edu

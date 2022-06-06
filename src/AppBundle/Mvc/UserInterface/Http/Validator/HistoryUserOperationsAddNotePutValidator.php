@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Mvc\UserInterface\Http\Validator;
+
+use Symfony\Component\Validator\Constraints as Assert;
+
+final class HistoryUserOperationsAddNotePutValidator extends Validator
+{
+    protected function constraints()
+    {
+        return new Assert\Collection([
+            'historyOperationId' => [
+                new Assert\NotBlank(),
+                new Assert\Type('string')
+            ],
+            'date' => [
+                new Assert\NotBlank(),
+                new Assert\Type('string')
+            ],
+            'text' => [
+                new Assert\NotBlank(),
+                new Assert\Type('string')
+            ]
+        ]);
+    }
+}

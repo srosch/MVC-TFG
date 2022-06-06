@@ -1,0 +1,50 @@
+version: "3.7"
+
+x-env-vars:
+  &env-vars
+  APP_ENV: "prod"
+  APP_DEBUG: 0
+  DB_HOST: "${DB_HOST}"
+  DB_AUTH: "${DB_AUTH}"
+  DB_NAME: "${DB_NAME}"
+  DB_USER: "${DB_USER}"
+  DB_PASSWORD: "${DB_PASSWORD}"
+  MAILER_TRANSPORT: "${MAILER_TRANSPORT}"
+  MAILER_ENCRYPTION: "${MAILER_ENCRYPTION}"
+  MAILER_HOST: "${MAILER_HOST}"
+  MAILER_USER: "${MAILER_USER}"
+  MAILER_PASSWORD: "${MAILER_PASSWORD}"
+  MAILER_PORT: "${MAILER_PORT}"
+  MAILER_FROM: "${MAILER_FROM}"
+
+volumes:
+  mvc-web_vendor:
+    external: true
+
+services:
+  backend-mvc:
+    container_name: backend-mvc
+    image: backend-mvc
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: production
+      args:
+        MONGO_HOST: "${DB_HOST}"
+        MONGO_PORT: 27017
+        DB_HOST: "${DB_HOST}"
+        DB_AUTH: "${DB_AUTH}"
+        DB_NAME: "${DB_NAME}"
+        DB_USER: "${DB_USER}"
+        DB_PASSWORD: "${DB_PASSWORD}"
+        MAILER_TRANSPORT: "${MAILER_TRANSPORT}"
+        MAILER_ENCRYPTION: "${MAILER_ENCRYPTION}"
+        MAILER_HOST: "${MAILER_HOST}"
+        MAILER_USER: "${MAILER_USER}"
+        MAILER_PASSWORD: "${MAILER_PASSWORD}"
+        MAILER_PORT: "${MAILER_PORT}"
+        MAILER_FROM: "${MAILER_FROM}"
+    volumes:
+      - mvc-web_vendor:/var/www/mvc/vendor
+    environment:
+      <<: *env-vars

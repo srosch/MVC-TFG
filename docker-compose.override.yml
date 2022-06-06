@@ -1,0 +1,66 @@
+version: "3.7"
+
+x-env-vars:
+  &env-vars
+  APP_ENV: "dev"
+  APP_DEBUG: 0
+  DB_HOST: "${DB_HOST}"
+  DB_AUTH: "${DB_AUTH}"
+  DB_NAME: "${DB_NAME}"
+  DB_USER: "${DB_USER}"
+  DB_PASSWORD: "${DB_PASSWORD}"
+  MAILER_TRANSPORT: "${MAILER_TRANSPORT}"
+  MAILER_ENCRYPTION: "${MAILER_ENCRYPTION}"
+  MAILER_HOST: "${MAILER_HOST}"
+  MAILER_USER: "${MAILER_USER}"
+  MAILER_PASSWORD: "${MAILER_PASSWORD}"
+  MAILER_PORT: "${MAILER_PORT}"
+  MAILER_FROM: "${MAILER_FROM}"
+  MAILHOG_HOST: "${MAILER_HOST}"
+  MAILHOG_PORT: "${MAILER_PORT}"
+  SYMFONY_DEBUG: 0
+
+volumes:
+  mvc-web_vendor:
+    external: true
+
+networks:
+  mvc-private:
+    driver: bridge
+    name: mvc-private
+
+services:
+  backend-mvc:
+    build:
+      target: development
+    ports:
+      - 84:80
+    depends_on:
+      - mongo-mvc
+    volumes:
+      - .:/var/www/mvc:cached
+      - mvc-web_vendor:/var/www/mvc/vendor
+    environment:
+      <<: *env-vars
+    restart: unless-stopped
+    networks:
+      - mvc-private
+
+  mongo-mvc:
+    image: mongo:3.6
+    container_name: mongo-mvc
+    ports:
+      - 27017:27017
+    volumes:
+      - ./docker/mongodb/rootfs/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+      - ./docker/mongodb/data/db:/data/db
+    networks:
+      - mvc-private
+
+  mailhog-mvc:
+    image: mailhog/mailhog:latest
+    container_name: mailhog-mvc
+    ports:
+      - 8025:8025
+    networks:
+      - mvc-private

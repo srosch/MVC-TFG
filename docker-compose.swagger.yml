@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  mvc-swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: mvc-swagger-editor
+    ports:
+      - "9002:8080"
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger_ui_container
+    ports:
+      - "9004:8080"
+    volumes:
+      - ./doc:/usr/share/nginx/html/doc
+    environment:
+      API_URL: ./swagger/swagger.yaml
+
+

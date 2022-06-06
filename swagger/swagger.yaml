@@ -1,0 +1,2223 @@
+openapi: "3.0.1"
+info:
+  description: "This is a swagger for Medical Virtual Center (MVC)"
+  version: "1.0.0"
+  title: "Medical Virtual Center"
+servers:
+  - url: http://localhost:84
+    description: develop
+
+tags:
+  - name: "Authentication"
+    description: "Operations about authentication"
+  - name: "User"
+    description: "Operations about user"
+  - name: "MedicalCenter"
+    description: "Operations about medical center"
+  - name: "Disease"
+    description: "All endpoints for disease"
+  - name: "Allergy"
+    description: "All endpoints for allergy"
+  - name: "Vaccine"
+    description: "All endpoints for vaccine"
+  - name: "Schedule"
+    description: "All endpoints for schedule"
+  - name: "OnlineConsultation"
+    description: "All endpoints for online consultation"
+  - name: "UserHistory"
+    description: "All endpoints for user history"
+  - name: "UserDocument"
+    description: "All endpoints for user history"
+
+paths:
+  /login:
+    post:
+      tags:
+        - "Authentication"
+      summary: "Get Token"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthPostLoginInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthDTO'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Bad Request" }
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+
+  /mvc/auth/user:
+    get:
+      tags:
+        - "User"
+      summary: "Get User authenticate"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/user/{userId}:
+    get:
+      tags:
+        - "User"
+      summary: "Get User by id"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/users:
+    get:
+      tags:
+        - "User"
+      summary: "Get Users"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsersDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/user/search/{nifOrCip}:
+    get:
+      tags:
+        - "User"
+      summary: "Get User by nif or cip"
+      parameters:
+        - name: nifOrCip
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/patient/{patientId}/modify-contact-data:
+    put:
+      tags:
+        - "User"
+      summary: "Update patient contact data"
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifyPatientContactDataInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/patient/{patientId}/modify-primary-center:
+    put:
+      tags:
+        - "User"
+      summary: "Update patient contact data"
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModifyPatientPrimaryCenterInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/health-personel:
+    post:
+      tags:
+        - "User"
+      summary: "Create Health Personel"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHealthPersonelInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/administrative:
+    post:
+      tags:
+        - "User"
+      summary: "Create Health Personel"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAdministrativeInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/patient:
+    post:
+      tags:
+        - "User"
+      summary: "Create patient"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePatientInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+
+  /mvc/medical-centers:
+    get:
+      tags:
+        - "MedicalCenter"
+      summary: "Get medical centers"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMedicalCentersDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/medical-center/{medicalCenterId}:
+    get:
+      tags:
+        - "MedicalCenter"
+      summary: "Get medical center"
+      parameters:
+        - name: medicalCenterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMedicalCenterDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+    put:
+      tags:
+        - "MedicalCenter"
+      summary: "Update medical center"
+      parameters:
+        - name: medicalCenterId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMedicalCenterInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMedicalCenterDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/medical-center:
+    post:
+      tags:
+        - "MedicalCenter"
+      summary: "Create medical center"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMedicalCenterInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMedicalCenterDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/diseases:
+    get:
+      tags:
+        - "Disease"
+      summary: "Get diseases list"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDiseasesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/allergies:
+    get:
+      tags:
+        - "Allergy"
+      summary: "Get allergies list"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllergiesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/vaccines:
+    get:
+      tags:
+        - "Vaccine"
+      summary: "Get vaccines list"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetVaccinesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/schedules:
+    get:
+      tags:
+        - "Schedule"
+      summary: "Get schedules user logged"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchedulesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/schedules/{patient}:
+    get:
+      tags:
+        - "Schedule"
+      summary: "Get schedules user patient"
+      parameters:
+        - name: patient
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchedulesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/schedule/add-note/{scheduleId}:
+    put:
+      tags:
+        - "Schedule"
+      summary: "add note in schedule"
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleAddNoteInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              examples:
+                string:
+                  value: "Se ha añadido la nota correctamente"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/schedule/{scheduleId}:
+    put:
+      tags:
+        - "Schedule"
+      summary: "update schedule date"
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleUpdateInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              examples:
+                string:
+                  value: "Se ha actualizado correctamente"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+    delete:
+      tags:
+        - "Schedule"
+      summary: "update schedule date"
+      parameters:
+        - name: scheduleId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              examples:
+                string:
+                  value: "Se ha eliminado correctamente"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/schedule:
+    post:
+      tags:
+        - "Schedule"
+      summary: "Add medical appointment"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleCreateInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              examples:
+                string:
+                  value: "Se ha creado correctamente"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/documents:
+    get:
+      tags:
+        - "UserDocument"
+      summary: "Get documents user logged"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/document/{documentId}/download:
+    get:
+      tags:
+        - "UserDocument"
+      summary: "Get documents user logged"
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/document:
+    post:
+      tags:
+        - "UserDocument"
+      summary: "Add medical appointment"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentCreateInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              examples:
+                string:
+                  value: "Se ha subido el archivo correctamente"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/online-consultation/{patient}:
+    get:
+      tags:
+        - "OnlineConsultation"
+      summary: "Get online consultations user patient"
+      parameters:
+        - name: patient
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnlineConsultationsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/online-consultation/pending:
+    get:
+      tags:
+        - "OnlineConsultation"
+      summary: "Get online consultations pending response"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnlineConsultationsPendingDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/online-consultation/{onlineConsultationId}/response:
+    put:
+      tags:
+        - "OnlineConsultation"
+      summary: "update schedule date"
+      parameters:
+        - name: onlineConsultationId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/responseOnlineConsultationInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnlineConsultationsPendingDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/online-consultation:
+    post:
+      tags:
+        - "OnlineConsultation"
+      summary: "Add online consultation"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OnlineConsultationInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnlineConsultationsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+  /mvc/history-allergy/{patient}:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user allergy from user patient"
+      parameters:
+        - name: patient
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserAllergiesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-allergy:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user allergy from user authenticated"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserAllergiesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+    post:
+      tags:
+        - "UserHistory"
+      summary: "add history user allergy in user patient"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoryUserAllergyInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserAllergiesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-disease/{patient}:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user disease from user patient"
+      parameters:
+        - name: patient
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserDiseasesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-disease:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user disease from user authenticated"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserDiseasesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+    post:
+      tags:
+        - "UserHistory"
+      summary: "add history user disease in user patient"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoryUserDiseaseInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserDiseasesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-disease/treatment/{historyUserDiseaseId}:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get tratments from history user disease"
+      parameters:
+        - name: historyUserDiseaseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserDiseaseTreatmentsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-disease/treatment:
+    post:
+      tags:
+        - "UserHistory"
+      summary: "add tratments in history user disease"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoryUserDiseaseTreatmentInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserDiseaseTreatmentsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-donations/{patient}:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user donations from user patient"
+      parameters:
+        - name: patient
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserDonationsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-donations:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user donation from user authenticated"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserDonationsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+    post:
+      tags:
+        - "UserHistory"
+      summary: "add history user disease in user patient"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoryUserDonationInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserDonationsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-vaccine/{patient}:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user vaccine from user patient"
+      parameters:
+        - name: patient
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserVaccinesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-vaccine:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user vaccine from user authenticated"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserVaccinesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+    post:
+      tags:
+        - "UserHistory"
+      summary: "add history user vaccine in user patient"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoryUserVaccineInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserVaccinesDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-opetations/{patient}:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user operation from user patient"
+      parameters:
+        - name: patient
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserOperationsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-operations:
+    get:
+      tags:
+        - "UserHistory"
+      summary: "get history user operation from user authenticated"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserOperationsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+    post:
+      tags:
+        - "UserHistory"
+      summary: "add history user vaccine in user patient"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoryUserOperationInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/historyUserOperationsDTO'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+  /mvc/history-operations/add-note/{historyOperationId}:
+    put:
+      tags:
+        - "UserHistory"
+      summary: "get history user operation from user authenticated"
+      parameters:
+        - name: historyOperationId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HistoryUserOperationAddNoteInput'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              examples:
+                string:
+                  value: "Se ha añadido la nota correctamente"
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                json:
+                  value: { "error": "Invalid credentials." }
+      security:
+        - token: [ ]
+
+
+components:
+  schemas:
+    ModifyPatientContactDataInput:
+      type: object
+      properties:
+        email:
+          nullable: false
+          type: string
+        address:
+          nullable: false
+          type: string
+        minucipality:
+          nullable: false
+          type: string
+        postalCode:
+          nullable: false
+          type: string
+        telephone:
+          nullable: true
+          type: string
+        mobilephone:
+          nullable: true
+          type: string
+        notifications:
+          nullable: false
+          type: string
+
+    ModifyPatientPrimaryCenterInput:
+      type: object
+      properties:
+        doctor:
+          nullable: false
+          type: string
+          description: 'id doctor'
+        nurse:
+          nullable: false
+          type: string
+          description: 'id nurse'
+        primaryCenter:
+          nullable: false
+          type: string
+          description: 'id medical center'
+
+    CreatePatientInput:
+      type: object
+      properties:
+        name:
+          nullable: false
+          type: string
+        password:
+          nullable: false
+          type: string
+        firstLastName:
+          nullable: false
+          type: string
+        secondLastName:
+          nullable: false
+          type: string
+        nif:
+          nullable: true
+          type: string
+        cip:
+          nullable: true
+          type: string
+        email:
+          nullable: false
+          type: string
+        notifications:
+          nullable: false
+          type: boolean
+        telephone:
+          nullable: true
+          type: string
+        mobilephone:
+          nullable: true
+          type: string
+        postalCode:
+          nullable: false
+          type: string
+        municipality:
+          nullable: false
+          type: string
+        address:
+          nullable: false
+          type: string
+        birthDate:
+          nullable: false
+          type: string
+        birthNotes:
+          nullable: false
+          type: string
+        birthSize:
+          nullable: false
+          type: number
+        birthWeight:
+          nullable: false
+          type: number
+        birthPlace:
+          nullable: false
+          type: string
+        bloodType:
+          nullable: false
+          type: string
+
+    PrimaryCenterData:
+      type: object
+      nullable: true
+      properties:
+        doctor:
+          $ref: '#/components/schemas/healthPersonnelGeneric'
+        nurse:
+          $ref: '#/components/schemas/healthPersonnelGeneric'
+        medicalCenter:
+          $ref: '#/components/schemas/medicalCenterGeneric'
+
+    healthPersonnelGeneric:
+      type: object
+      nullable: false
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        firstLastName:
+          type: string
+          nullable: false
+
+    patientGeneric:
+      type: object
+      nullable: false
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        firstLastName:
+          type: string
+          nullable: false
+
+    medicalCenterGeneric:
+      type: object
+      nullable: false
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        address:
+          type: string
+          nullable: false
+
+    ContactData:
+      type: object
+      nullable: true
+      properties:
+        email:
+          nullable: true
+          type: string
+        address:
+          nullable: false
+          type: string
+        municipality:
+          nullable: false
+          type: string
+        postalCode:
+          nullable: false
+          type: string
+        telephone:
+          nullable: true
+          type: string
+        mobilephone:
+          nullable: true
+          type: string
+        notifications:
+          nullable: false
+          type: boolean
+
+    BirthData:
+      type: object
+      nullable: true
+      properties:
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        place:
+          nullable: false
+          type: string
+        weight:
+          nullable: false
+          type: number
+        size:
+          nullable: false
+          type: number
+        notes:
+          nullable: true
+          type: string
+
+    DateDTO:
+      type: object
+      nullable: false
+      properties:
+        date:
+          type: string
+          nullable: false
+        timezone_type:
+          type: integer
+          nullable: false
+        timezone:
+          type: string
+          nullable: false
+
+    AuthPostLoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+          nullable: false
+        password:
+          type: string
+          nullable: false
+
+    AuthDTO:
+      type: object
+      properties:
+        token:
+          type: string
+          nullable: false
+        end_date:
+          type: string
+          nullable: false
+          description: ISO date (DATE_ISO8601)
+
+    CreateHealthPersonelInput:
+      type: object
+      properties:
+        name:
+          nullable: false
+          type: string
+        password:
+          nullable: false
+          type: string
+        firstLastName:
+          nullable: false
+          type: string
+        secondLastName:
+          nullable: true
+          type: string
+        nif:
+          nullable: false
+          type: string
+        email:
+          nullable: false
+          type: string
+        address:
+          nullable: false
+          type: string
+        municipality:
+          nullable: false
+          type: string
+        postalCode:
+          nullable: false
+          type: string
+        telephone:
+          nullable: true
+          type: string
+        mobilephone:
+          nullable: true
+          type: string
+
+    CreateAdministrativeInput:
+      type: object
+      properties:
+        name:
+          nullable: false
+          type: string
+        password:
+          nullable: false
+          type: string
+        firstLastName:
+          nullable: false
+          type: string
+        secondLastName:
+          nullable: true
+          type: string
+        nif:
+          nullable: false
+          type: string
+        email:
+          nullable: false
+          type: string
+        address:
+          nullable: false
+          type: string
+        municipality:
+          nullable: false
+          type: string
+        postalCode:
+          nullable: false
+          type: string
+        telephone:
+          nullable: true
+          type: string
+        mobilephone:
+          nullable: true
+          type: string
+
+    GetUsersDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetUserDTO'
+
+    GetUserDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          nullable: false
+          type: string
+        firstLastName:
+          nullable: false
+          type: string
+        secondLastName:
+          nullable: false
+          type: string
+        sex:
+          nullable: true
+          type: integer
+        nif:
+          nullable: true
+          type: string
+        cip:
+          nullable: true
+          type: string
+        email:
+          nullable: false
+          type: string
+        roles:
+          type: array
+          nullable: true
+          items:
+            type: string
+        primaryCenter:
+          $ref: '#/components/schemas/PrimaryCenterData'
+        contact:
+          $ref: '#/components/schemas/ContactData'
+        birth:
+          $ref: '#/components/schemas/BirthData'
+
+    CreateMedicalCenterInput:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+        address:
+          type: string
+          nullable: false
+        healthPersonnel:
+          type: array
+          items:
+            type: string
+
+    UpdateMedicalCenterInput:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: false
+        address:
+          type: string
+          nullable: false
+        healthPersonnel:
+          type: array
+          items:
+            type: string
+
+    GetMedicalCentersDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetMedicalCenterDTO'
+
+    GetMedicalCenterDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        address:
+          type: string
+          nullable: false
+        healthPersonel:
+          type: array
+          nullable: true
+          items:
+            type: string
+
+    GetDiseasesDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetDiseaseDTO'
+    GetDiseaseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        description:
+          type: string
+          nullable: true
+
+    GetAllergiesDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetAllergyDTO'
+    GetAllergyDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        notes:
+          type: string
+          nullable: true
+
+    GetVaccinesDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/GetVaccineDTO'
+    GetVaccineDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        code:
+          type: string
+          nullable: false
+        description:
+          type: string
+          nullable: true
+        vaccinationPlanMonth:
+          type: array
+          nullable: true
+          items:
+            type: string
+
+    SchedulesDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/ScheduleDTO'
+    ScheduleDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        patient:
+          $ref: '#/components/schemas/patientGeneric'
+        healthPersonnel:
+          $ref: '#/components/schemas/healthPersonnelGeneric'
+        medicalCenter:
+          $ref: '#/components/schemas/medicalCenterGeneric'
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        text:
+          type: string
+          nullable: true
+        notes:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/notesDTO'
+
+    notesDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/noteDTO'
+
+    noteDTO:
+      type: object
+      properties:
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        text:
+          type: string
+          nullable: false
+        healthPersonne:
+          $ref: '#/components/schemas/healthPersonnelGeneric'
+
+    ScheduleAddNoteInput:
+      type: object
+      properties:
+        date:
+          type: string
+          nullable: false
+        text:
+          type: string
+          nullable: false
+
+    ScheduleUpdateInput:
+      type: object
+      properties:
+        date:
+          type: string
+          nullable: false
+
+    ScheduleCreateInput:
+      type: object
+      properties:
+        center:
+          type: string
+          nullable: false
+        healthPersonnel:
+          type: string
+          nullable: false
+        date:
+          type: string
+          nullable: false
+        text:
+          type: string
+          nullable: false
+
+    DocumentsDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/DocumentDTO'
+    DocumentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        base64:
+          type: string
+          nullable: false
+        type:
+          type: string
+          nullable: false
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        notes:
+          type: string
+          nullable: false
+
+    DocumentCreateInput:
+      type: object
+      properties:
+        patient:
+          type: string
+          nullable: false
+        type:
+          type: string
+          nullable: false
+        date:
+          type: string
+          nullable: false
+        notes:
+          type: string
+          nullable: false
+        base64:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+    OnlineConsultationsDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/OnlineConsultationDTO'
+    OnlineConsultationDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        patient:
+          $ref: '#/components/schemas/patientGeneric'
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        text:
+          type: string
+          nullable: false
+        response:
+          $ref: '#/components/schemas/responseOnlineConsultation'
+
+    responseOnlineConsultation:
+      type: object
+      properties:
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        healthPersonnel:
+          $ref: '#/components/schemas/healthPersonnelGeneric'
+        text:
+          type: string
+          nullable: false
+
+    OnlineConsultationsPendingDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/responseOnlineConsultationPending'
+    responseOnlineConsultationPending:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        patient:
+          $ref: '#/components/schemas/patientGeneric'
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        text:
+          type: string
+          nullable: false
+
+    responseOnlineConsultationInput:
+      type: object
+      properties:
+        date:
+          type: string
+          nullable: false
+        text:
+          type: string
+          nullable: false
+
+    OnlineConsultationInput:
+      type: object
+      properties:
+        date:
+          type: string
+          nullable: false
+        text:
+          type: string
+          nullable: false
+
+    historyUserAllergiesDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/historyUserAllergyDTO'
+    historyUserAllergyDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        patient:
+          $ref: '#/components/schemas/patientGeneric'
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        allergy:
+          $ref: '#/components/schemas/allergySimplDTO'
+        notes:
+          type: string
+          nullable: false
+    allergySimplDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+    HistoryUserAllergyInput:
+      type: object
+      properties:
+        patient:
+          type: string
+          nullable: false
+        allergy:
+          type: string
+          nullable: false
+        date:
+          type: string
+          nullable: false
+        notes:
+          type: string
+          nullable: false
+
+    historyUserDiseasesDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/historyUserDiseaseDTO'
+    historyUserDiseaseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        patient:
+          $ref: '#/components/schemas/patientGeneric'
+        initDate:
+          $ref: '#/components/schemas/DateDTO'
+        endDate:
+          $ref: '#/components/schemas/DateDTO'
+        disease:
+          $ref: '#/components/schemas/diseaseSimplDTO'
+        notes:
+          type: string
+          nullable: false
+    diseaseSimplDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+    HistoryUserDiseaseInput:
+      type: object
+      properties:
+        patient:
+          type: string
+          nullable: false
+        disease:
+          type: string
+          nullable: false
+        initDate:
+          type: string
+          nullable: false
+        notes:
+          type: string
+          nullable: false
+
+    historyUserDonationsDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/historyUserDonationDTO'
+    historyUserDonationDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        patient:
+          $ref: '#/components/schemas/patientGeneric'
+        type:
+          type: string
+          nullable: false
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        notes:
+          type: string
+          nullable: false
+    HistoryUserDonationInput:
+      type: object
+      properties:
+        patient:
+          type: string
+          nullable: false
+        type:
+          type: string
+          nullable: false
+        date:
+          type: string
+          nullable: false
+        notes:
+          type: string
+          nullable: false
+
+    historyUserVaccinesDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/historyUserVaccineDTO'
+    historyUserVaccineDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        patient:
+          $ref: '#/components/schemas/patientGeneric'
+        vaccine:
+          $ref: '#/components/schemas/vaccineSimplDTO'
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        notes:
+          type: string
+          nullable: false
+    vaccineSimplDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        code:
+          type: string
+          nullable: false
+    HistoryUserVaccineInput:
+      type: object
+      properties:
+        patient:
+          type: string
+          nullable: false
+        vaccine:
+          type: string
+          nullable: false
+        date:
+          type: string
+          nullable: false
+        notes:
+          type: string
+          nullable: false
+
+    historyUserDiseaseTreatmentsDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/historyUserDiseaseTreatmentDTO'
+    historyUserDiseaseTreatmentDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        initDate:
+          $ref: '#/components/schemas/DateDTO'
+        endDate:
+          $ref: '#/components/schemas/DateDTO'
+        notes:
+          type: string
+          nullable: false
+    HistoryUserDiseaseTreatmentInput:
+      type: object
+      properties:
+        historyUserDisease:
+          type: string
+          nullable: false
+        initDate:
+          type: string
+          nullable: false
+        endDate:
+          type: string
+          nullable: false
+        notes:
+          type: string
+          nullable: false
+
+    historyUserOperationsDTO:
+      type: array
+      items:
+        $ref: '#/components/schemas/historyUserOperationDTO'
+    historyUserOperationDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: false
+        patient:
+          $ref: '#/components/schemas/patientGeneric'
+        date:
+          $ref: '#/components/schemas/DateDTO'
+        notes:
+          $ref: '#/components/schemas/notesDTO'
+
+    HistoryUserOperationInput:
+      type: object
+      properties:
+        patient:
+          type: string
+          nullable: false
+        date:
+          type: string
+          nullable: false
+        notes:
+          type: string
+          nullable: false
+    HistoryUserOperationAddNoteInput:
+      type: object
+      properties:
+        date:
+          type: string
+          nullable: false
+        text:
+          type: string
+          nullable: false
+
+
+  securitySchemes:
+    token:
+      type: apiKey
+      name: X-AUTH-TOKEN
+      description: User api key for third-party
+      in: header

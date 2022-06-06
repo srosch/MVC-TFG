@@ -1,0 +1,4 @@
+mvc_bundle:
+    resource: "@AppBundle/Mvc/UserInterface/Http/Controller/*"
+    type:     annotation
+    prefix:   /

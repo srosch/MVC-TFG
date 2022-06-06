@@ -1,0 +1,5 @@
+f4ef5e,172.22.0.1,POST,http://localhost:84/login,1654422376,,200
+48dc18,172.22.0.1,GET,http://localhost:84/mvc/auth/user,1654422380,,200
+1fb43f,172.22.0.1,POST,http://localhost:84/mvc/history-donations,1654422390,,500
+4215e5,172.22.0.1,POST,http://localhost:84/login,1654422428,,200
+3c2610,172.22.0.1,POST,http://localhost:84/mvc/history-donations,1654422440,,200

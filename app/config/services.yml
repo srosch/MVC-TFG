@@ -1,0 +1,182 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  _instanceof:
+    Mvc\Infrastructure\CQRS\Command\CommandHandler:
+      tags: ['mvc.command_handler']
+
+    Mvc\Infrastructure\CQRS\Query\QueryHandler:
+      tags: ['mvc.query_handler']
+
+    Mvc\Infrastructure\CQRS\Event\EventHandler:
+      tags: ['mvc.event_handler']
+
+  Mvc\Infrastructure\CQRS\Command\CommandBus:
+    class: Mvc\Infrastructure\CQRS\Command\SimpleCommandBus
+    arguments: [!tagged mvc.command_handler]
+
+  Mvc\Infrastructure\CQRS\Query\QueryBus:
+    class: Mvc\Infrastructure\CQRS\Query\SimpleQueryBus
+    arguments: [!tagged mvc.query_handler]
+
+  Mvc\Infrastructure\CQRS\Event\EventBus:
+    class: Mvc\Infrastructure\CQRS\Event\SimpleEventBus
+    arguments: [!tagged mvc.event_handler]
+
+  Mvc\Application\Service\:
+    resource: '%kernel.project_dir%/src/AppBundle/Mvc/Application/Service/*'
+    exclude: '%kernel.project_dir%/src/AppBundle/Mvc/Application/{*Response.php,*Query.php,*Command.php}'
+
+  Mvc\UserInterface\Http\Controller\:
+    resource: '%kernel.project_dir%/src/AppBundle/Mvc/UserInterface/Http/Controller/*'
+    tags: ['controller.service_arguments']
+
+
+  Mvc\UserInterface\Http\Middleware\JSONRequestMiddleware:
+    class: Mvc\UserInterface\Http\Middleware\JSONRequestMiddleware
+    tags: [{ name: kernel.event_listener, event: kernel.request }]
+
+  Mvc\UserInterface\Http\Middleware\HttpExceptionMiddleware:
+    class: Mvc\UserInterface\Http\Middleware\HttpExceptionMiddleware
+    arguments:
+      - "%kernel.debug%"
+    tags: [{ name: kernel.event_listener, event: kernel.exception }]
+
+  Mvc\Infrastructure\CQRS\Event\JSONEventSerializer:
+    class: Mvc\Infrastructure\CQRS\Event\JSONEventSerializer
+    arguments: [!tagged mvc.event_mapper]
+
+  Mvc\Infrastructure\Doctrine\DoctrineEventPublisher:
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@Mvc\Infrastructure\CQRS\Event\JSONEventSerializer'
+
+  mail_service:
+    class: AppBundle\Mvc\Notifier\MailService
+    arguments:
+      - '@mailer'
+      - '%mailer_from%'
+      - '%is_production%'
+      - '%developer_email%'
+
+  AppBundle\Mvc\Application\General\IdGenerator:
+    class: AppBundle\Mvc\Application\General\MongoIdGenerator
+
+  AppBundle\Mvc\Application\General\UuidGenerator: ~
+
+  Symfony\Contracts\HttpClient\HttpClientInterface:
+    class: Symfony\Component\HttpClient\CurlHttpClient
+
+  Symfony\Component\HttpClient\NativeHttpClient:
+    class: Symfony\Component\HttpClient\NativeHttpClient
+
+  AppBundle\Mvc\Security\AuthenticateControllerListener:
+    class: AppBundle\Mvc\Security\AuthenticateControllerListener
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: __invoke, priority: 8 }
+
+  #Auth
+  Mvc\Domain\Factory\TokenFactory:
+    class: Mvc\Domain\Factory\SimpleTokenFactory
+    arguments: [ '%token_secret%', '%token_expiration_days%' ]
+
+
+  Mvc\Domain\UserRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineUserRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\AllergyRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineAllergyRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\DiseaseRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineDiseaseRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\VaccineRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineVaccineRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\HistoryUserAllergyRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineHistoryUserAllergyRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\HistoryUserDiseaseRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineHistoryUserDiseaseRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\HistoryUserDonationsRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineHistoryUserDonationsRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\HistoryUserOperationsRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineHistoryUserOperationsRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\HistoryUserVaccineRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineHistoryUserVaccineRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\MedicalCenterRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineMedicalCenterRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\ScheduleRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineScheduleRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\UserDiseaseTreatmentRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineUserDiseaseTreatmentRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\UserDocummentRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineUserDocummentRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\OnlineConsultationRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineOnlineConsultationRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Domain\UserDocumentRepository:
+    class: Mvc\Infrastructure\Doctrine\DoctrineUserDocumentRepository
+    arguments:
+      - '@doctrine.odm.mongodb.document_manager'
+      - '@doctrine.odm.mongodb.document_manager'
+
+  Mvc\Notifier\UserMailSenderInterface:
+    class: Mvc\Notifier\UserMailSender
+    arguments:
+      - '@mail_service'
+      - '@twig'

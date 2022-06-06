@@ -1,0 +1,103 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    version: "2022-04-01"
+    locale: en
+
+framework:
+    translator: { fallbacks: ['%locale%'] }
+    secret: '%secret%'
+    router:
+        resource: '%kernel.root_dir%/config/routing.yml'
+        strict_requirements: ~
+    form: ~
+    csrf_protection: ~
+    validation: { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    default_locale: '%locale%'
+    session:
+        # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id:  session.handler.native_file
+        save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
+    http_method_override: true
+    assets: ~
+    php_errors:
+        log: true
+knp_snappy:
+    pdf:
+        enabled:    true
+        binary:     xvfb-run wkhtmltopdf
+        options:    []
+
+nelmio_cors:
+    defaults:
+        allow_credentials: false
+        allow_origin: ['*']
+        allow_headers: ['*']
+        allow_methods: ['GET', 'POST', 'PUT', 'DELETE']
+        max_age: 3600
+        hosts: []
+        origin_regex: false
+
+# Twig Configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        production_url: '%production_url%'
+
+# Doctrine ODM Configuration
+doctrine_mongodb:
+    auto_generate_hydrator_classes: true
+    connections:
+        default:
+            server: "mongodb://%database_host%:%database_port%" #mongodb://localhost:27017
+            options:
+                username: "%database_user%"
+                password: "%database_password%"
+                db: "%database_name%"
+                authSource: "%database_auth%"
+    default_database: "%database_name%"
+    document_managers:
+        default:
+            logging: false
+            mappings:
+                Mvc:
+                    type: annotation
+                    dir: '%kernel.project_dir%/src/AppBundle/Mvc/Domain'
+                    prefix: Mvc\Domain
+                DomainEvent:
+                    type: annotation
+                    dir: '%kernel.project_dir%/src/AppBundle/Mvc/Infrastructure/Doctrine/Document'
+                    prefix: Mvc\Infrastructure\Doctrine\Document
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: '%mailer_transport%'
+    host: '%mailer_host%'
+    port: '%mailer_port%'
+    username: '%mailer_user%'
+    password: '%mailer_password%'
+    encryption: '%mailer_encryption%' # TLS encryption is required
+
+# FOS USER
+fos_user:
+    db_driver: "mongodb" # mongodb
+    firewall_name: main
+    user_class: Mvc\Domain\User
+    service:
+        mailer: fos_user.mailer.twig_swift
+    from_email:
+        address:        mvc@uoc.edu
+        sender_name:    MVC
+    resetting:
+        email:
+            from_email:
+                address:        mvc@uoc.edu
+                sender_name:    MVC
